@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+	<properties resource="generatorConfig.properties" />
+
+	<classPathEntry location="${jdbc.connector}" />
+	<!-- 不生成example文件 -->
+	<context id="javaee_fw" targetRuntime="MyBatis3"
+		defaultModelType="flat">
+
+		<!-- 自动转换字段名中的sql关键字 开启会使xml 文件中出现 "name" 带双引号的字段名 -->
+		<!-- <property name="autoDelimitKeywords" value="true" /> -->
+
+		<!-- 删除注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+		
+		<!-- jdbc连接 -->
+		<jdbcConnection driverClass="${jdbc.driverClass}"
+			connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}">
+		</jdbcConnection>
+		
+		<!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<!-- 生成实体类地址 -->
+		<javaModelGenerator targetPackage="studio.fw.entity"
+			targetProject="${projectName}">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- 生成mapxml文件 -->
+		<sqlMapGenerator targetPackage="studio.fw.mapper"
+			targetProject="${projectName}">
+		</sqlMapGenerator>
+
+		<!-- <sqlMapGenerator targetPackage="com.zlzkj.app.mapper" targetProject="${projectName}/src/main/java"> 
+			</sqlMapGenerator> -->
+
+		<!-- 生成mapxml对应client，也就是接口dao -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="studio.fw.mapper" targetProject="${projectName}">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- 表映射 配置表信息 -->
+<!-- 		<table tableName="fw_user" domainObjectName="UserInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="fw_admin" domainObjectName="AdminInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table> -->
+		<table tableName="fw_salelist" domainObjectName="SalelistInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+<!-- 		<table tableName="fw_wishlist" domainObjectName="WishlistInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="fw_reply" domainObjectName="ReplyInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="fw_message" domainObjectName="MessageInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="fw_letter" domainObjectName="LetterInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="fw_category" domainObjectName="CategoryInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="fw_cart" domainObjectName="CartInfo"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table> -->
+	</context>
+</generatorConfiguration>

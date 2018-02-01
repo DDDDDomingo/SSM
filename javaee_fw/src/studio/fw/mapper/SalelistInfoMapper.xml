@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.SalelistInfoMapper">
+	<resultMap id="BaseResultMap" type="studio.fw.entity.SalelistInfo">
+		<id column="Sale_id" property="saleId" jdbcType="INTEGER" />
+		<result column="Sale_name" property="saleName" jdbcType="CHAR" />
+		<result column="Sale_img" property="saleImg" jdbcType="CHAR" />
+		<result column="Sale_time" property="saleTime" jdbcType="TIMESTAMP" />
+		<result column="Sale_price" property="salePrice" jdbcType="DECIMAL" />
+		<result column="Sale_cata" property="saleCata" jdbcType="INTEGER" />
+		<result column="Sale_state" property="saleState" jdbcType="BIT" />
+		<result column="User_id" property="userId" jdbcType="INTEGER" />
+		<result column="Sale_reserve" property="saleReserve" jdbcType="INTEGER" />
+		<result column="Buyer_id" property="buyerId" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="studio.fw.entity.SalelistInfo"
+		extends="BaseResultMap">
+		<result column="Sale_content" property="saleContent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		Sale_id, Sale_name, Sale_img, Sale_time, Sale_price,
+		Sale_cata, Sale_state,
+		User_id,
+		Sale_reserve, Buyer_id
+	</sql>
+	<sql id="Blob_Column_List">
+		Sale_content
+	</sql>
+
+	<!-- 选取前6个 -->
+	<select id="listSix" resultMap="ResultMapWithBLOBs">
+		SELECT * FROM fw_salelist order
+		by Sale_time desc limit 6
+	</select>
+
+	<!-- 选取前6个 -->
+	<select id="listHot" resultMap="ResultMapWithBLOBs">
+		SELECT * FROM fw_salelist limit 6
+	</select>
+
+	<!-- 类别ID选取3个 -->
+	<select id="list3ByCate" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		SELECT * FROM fw_salelist where Sale_cata =
+		#{saleCata,jdbcType=INTEGER} limit 3
+	</select>
+
+	<!-- 该类别所有数量 -->
+	<select id="showByCateTotal" resultType="java.lang.Integer">
+		SELECT count(*) FROM fw_salelist where Sale_cata = #{saleCata,jdbcType=INTEGER}
+	</select>
+
+	<!-- 类别ID所有,加上page -->
+	<select id="listByCate" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		SELECT * FROM fw_salelist where Sale_cata =
+		#{0,jdbcType=INTEGER}
+			limit #{1},#{2}
+	</select>
+
+	<!-- 增加商品 -->
+	<insert id="insertSelective" parameterType="studio.fw.entity.SalelistInfo">
+		insert into fw_salelist
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="saleId != null">
+				Sale_id,
+			</if>
+			<if test="saleName != null">
+				Sale_name,
+			</if>
+			<if test="saleImg != null">
+				Sale_img,
+			</if>
+			<if test="saleTime != null">
+				Sale_time,
+			</if>
+			<if test="salePrice != null">
+				Sale_price,
+			</if>
+			<if test="saleCata != null">
+				Sale_cata,
+			</if>
+			<if test="saleState != null">
+				Sale_state,
+			</if>
+			<if test="userId != null">
+				User_id,
+			</if>
+			<if test="saleReserve != null">
+				Sale_reserve,
+			</if>
+			<if test="buyerId != null">
+				Buyer_id,
+			</if>
+			<if test="saleContent != null">
+				Sale_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="saleId != null">
+				#{saleId,jdbcType=INTEGER},
+			</if>
+			<if test="saleName != null">
+				#{saleName,jdbcType=CHAR},
+			</if>
+			<if test="saleImg != null">
+				#{saleImg,jdbcType=CHAR},
+			</if>
+			<if test="saleTime != null">
+				#{saleTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="salePrice != null">
+				#{salePrice,jdbcType=DECIMAL},
+			</if>
+			<if test="saleCata != null">
+				#{saleCata,jdbcType=INTEGER},
+			</if>
+			<if test="saleState != null">
+				#{saleState,jdbcType=BIT},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="saleReserve != null">
+				#{saleReserve,jdbcType=INTEGER},
+			</if>
+			<if test="buyerId != null">
+				#{buyerId,jdbcType=INTEGER},
+			</if>
+			<if test="saleContent != null">
+				#{saleContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 全部取出 -->
+	<select id="listAll" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+	</select>
+	<!-- 时间降序 -->
+	<select id="showByName" resultMap="ResultMapWithBLOBs"
+		parameterType="studio.fw.entity.SalelistInfo">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where Sale_name like CONCAT('%',#{saleName},'%')
+		<if test="saleCata != null">
+			AND Sale_cata = #{saleCata,jdbcType=INTEGER}
+		</if>
+		order by Sale_time desc
+	</select>
+	<!-- 价格降序 -->
+	<select id="showDesc" resultMap="ResultMapWithBLOBs"
+		parameterType="studio.fw.entity.SalelistInfo">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where Sale_name like CONCAT('%',#{saleName},'%')
+		<if test="saleCata != null">
+			AND Sale_cata = #{saleCata,jdbcType=INTEGER}
+		</if>
+		order by Sale_price desc
+	</select>
+	<!-- 价格升序 -->
+	<select id="showAsc" resultMap="ResultMapWithBLOBs"
+		parameterType="studio.fw.entity.SalelistInfo">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where Sale_name like CONCAT('%',#{saleName},'%')
+		<if test="saleCata != null">
+			AND Sale_cata = #{saleCata,jdbcType=INTEGER}
+		</if>
+		order by Sale_price asc
+	</select>
+
+	<!-- 用户查看自己发布的商品 -->
+	<select id="showByUserId" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where User_id = #{userId,jdbcType=INTEGER}
+	</select>
+	<!-- 买家查看买到发布的商品 -->
+	<select id="showByBuyId" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where Buyer_id = #{buyerId,jdbcType=INTEGER}
+	</select>
+	<!-- 卖家查看自己卖出的商品 -->
+	<select id="showBySellerId" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where User_id = #{userId,jdbcType=INTEGER} AND
+		Sale_state = 1
+	</select>
+	<!-- 通过ID获得商品 -->
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_salelist
+		where Sale_id = #{saleId,jdbcType=INTEGER}
+	</select>
+	<!-- 通过ID删除商品 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		fw_salelist
+		where Sale_id = #{saleId,jdbcType=INTEGER}
+	</delete>
+	<!-- 通过ID修改商品信息 -->
+	<update id="updateByPrimaryKeySelective" parameterType="studio.fw.entity.SalelistInfo">
+		update fw_salelist
+		<set>
+			<if test="saleName != null">
+				Sale_name = #{saleName,jdbcType=CHAR},
+			</if>
+			<if test="saleImg != null">
+				Sale_img = #{saleImg,jdbcType=CHAR},
+			</if>
+			<if test="saleTime != null">
+				Sale_time = #{saleTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="salePrice != null">
+				Sale_price = #{salePrice,jdbcType=DECIMAL},
+			</if>
+			<if test="saleCata != null">
+				Sale_cata = #{saleCata,jdbcType=INTEGER},
+			</if>
+			<if test="saleState != null">
+				Sale_state = #{saleState,jdbcType=BIT},
+			</if>
+			<if test="userId != null">
+				User_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="saleReserve != null">
+				Sale_reserve = #{saleReserve,jdbcType=INTEGER},
+			</if>
+			<if test="buyerId != null">
+				Buyer_id = #{buyerId,jdbcType=INTEGER},
+			</if>
+			<if test="saleContent != null">
+				Sale_content = #{saleContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where Sale_id = #{saleId,jdbcType=INTEGER}
+	</update>
+</mapper>

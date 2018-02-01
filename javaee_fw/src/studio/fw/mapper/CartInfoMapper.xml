@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.CartInfoMapper">
+	<resultMap id="BaseResultMap" type="studio.fw.entity.CartInfo">
+		<id column="cart_id" property="cartId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="sale_id" property="saleId" jdbcType="INTEGER" />
+		<result column="seller_id" property="sellerId" jdbcType="INTEGER" />
+		<result column="cart_quantity" property="cartQuantity"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		cart_id, user_id, sale_id, seller_id, cart_quantity, create_time, update_time
+	</sql>
+	<!-- 用户ID得到所有商品 -->
+	<select id="sList" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from fw_cart
+		where user_id = #{userId,jdbcType=INTEGER}
+	</select>
+	<!-- 删除购物车 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from fw_cart
+		where cart_id = #{cartId,jdbcType=INTEGER}
+	</delete>
+	<!-- 加入购物车 -->
+	<insert id="insertSelective" parameterType="studio.fw.entity.CartInfo">
+		insert into fw_cart
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cartId != null">
+				cart_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="saleId != null">
+				sale_id,
+			</if>
+			<if test="sellerId != null">
+				seller_id,
+			</if>
+			<if test="cartQuantity != null">
+				cart_quantity,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cartId != null">
+				#{cartId,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="saleId != null">
+				#{saleId,jdbcType=INTEGER},
+			</if>
+			<if test="sellerId != null">
+				#{sellerId,jdbcType=INTEGER},
+			</if>
+			<if test="cartQuantity != null">
+				#{cartQuantity,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	
+</mapper>

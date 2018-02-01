@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.AdminInfoMapper" >
+  <resultMap id="BaseResultMap" type="studio.fw.entity.AdminInfo" >
+    <id column="Admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="Admin_name" property="adminName" jdbcType="CHAR" />
+    <result column="Admin_account" property="adminAccount" jdbcType="CHAR" />
+    <result column="Admin_pwd" property="adminPwd" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Admin_id, Admin_name, Admin_account, Admin_pwd
+  </sql>
+  <!-- 登陆验证 -->
+  <select id="loginCheck" resultMap="BaseResultMap" parameterType="studio.fw.entity.AdminInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from fw_admin
+    where Admin_account = #{adminAccount,jdbcType=CHAR} AND Admin_pwd = #{adminPwd,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from fw_admin
+    where Admin_id = #{adminId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from fw_admin
+    where Admin_id = #{adminId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="studio.fw.entity.AdminInfo" >
+    insert into fw_admin (Admin_id, Admin_name, Admin_account, 
+      Admin_pwd)
+    values (#{adminId,jdbcType=INTEGER}, #{adminName,jdbcType=CHAR}, #{adminAccount,jdbcType=CHAR}, 
+      #{adminPwd,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="studio.fw.entity.AdminInfo" >
+    insert into fw_admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="adminId != null" >
+        Admin_id,
+      </if>
+      <if test="adminName != null" >
+        Admin_name,
+      </if>
+      <if test="adminAccount != null" >
+        Admin_account,
+      </if>
+      <if test="adminPwd != null" >
+        Admin_pwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="adminId != null" >
+        #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="adminName != null" >
+        #{adminName,jdbcType=CHAR},
+      </if>
+      <if test="adminAccount != null" >
+        #{adminAccount,jdbcType=CHAR},
+      </if>
+      <if test="adminPwd != null" >
+        #{adminPwd,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="studio.fw.entity.AdminInfo" >
+    update fw_admin
+    <set >
+      <if test="adminName != null" >
+        Admin_name = #{adminName,jdbcType=CHAR},
+      </if>
+      <if test="adminAccount != null" >
+        Admin_account = #{adminAccount,jdbcType=CHAR},
+      </if>
+      <if test="adminPwd != null" >
+        Admin_pwd = #{adminPwd,jdbcType=CHAR},
+      </if>
+    </set>
+    where Admin_id = #{adminId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="studio.fw.entity.AdminInfo" >
+    update fw_admin
+    set Admin_name = #{adminName,jdbcType=CHAR},
+      Admin_account = #{adminAccount,jdbcType=CHAR},
+      Admin_pwd = #{adminPwd,jdbcType=CHAR}
+    where Admin_id = #{adminId,jdbcType=INTEGER}
+  </update>
+</mapper>

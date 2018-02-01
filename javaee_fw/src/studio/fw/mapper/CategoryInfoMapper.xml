@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.CategoryInfoMapper" >
+  <resultMap id="BaseResultMap" type="studio.fw.entity.CategoryInfo" >
+    <id column="Category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="Category_type" property="categoryType" jdbcType="CHAR" />
+    <result column="Category_img" property="categoryImg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Category_id, Category_type, Category_img
+  </sql>
+  <!-- 找出所有类别 -->
+  <select id="listAll" resultMap="BaseResultMap" parameterType="studio.fw.entity.CategoryInfo">
+  	select * from fw_category
+  </select>
+  <!-- 找出类别对应的ID -->
+  <select id="getIdByName" resultMap="BaseResultMap" parameterType="studio.fw.entity.CategoryInfo">
+  	select * from fw_category where Category_type = #{categoryType,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from fw_category
+    where Category_id = #{categoryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from fw_category
+    where Category_id = #{categoryId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="studio.fw.entity.CategoryInfo" >
+    insert into fw_category (Category_id, Category_type, Category_img
+      )
+    values (#{categoryId,jdbcType=INTEGER}, #{categoryType,jdbcType=CHAR}, #{categoryImg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="studio.fw.entity.CategoryInfo" >
+    insert into fw_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        Category_id,
+      </if>
+      <if test="categoryType != null" >
+        Category_type,
+      </if>
+      <if test="categoryImg != null" >
+        Category_img,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryType != null" >
+        #{categoryType,jdbcType=CHAR},
+      </if>
+      <if test="categoryImg != null" >
+        #{categoryImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="studio.fw.entity.CategoryInfo" >
+    update fw_category
+    <set >
+      <if test="categoryType != null" >
+        Category_type = #{categoryType,jdbcType=CHAR},
+      </if>
+      <if test="categoryImg != null" >
+        Category_img = #{categoryImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Category_id = #{categoryId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="studio.fw.entity.CategoryInfo" >
+    update fw_category
+    set Category_type = #{categoryType,jdbcType=CHAR},
+      Category_img = #{categoryImg,jdbcType=VARCHAR}
+    where Category_id = #{categoryId,jdbcType=INTEGER}
+  </update>
+</mapper>

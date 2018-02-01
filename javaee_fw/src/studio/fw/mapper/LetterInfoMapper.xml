@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.LetterInfoMapper" >
+  <resultMap id="BaseResultMap" type="studio.fw.entity.LetterInfo" >
+    <id column="Letter_id" property="letterId" jdbcType="INTEGER" />
+    <result column="Sender_id" property="senderId" jdbcType="INTEGER" />
+    <result column="Reciever_id" property="recieverId" jdbcType="INTEGER" />
+    <result column="Letter_time" property="letterTime" jdbcType="TIMESTAMP" />
+    <result column="Letter_state" property="letterState" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="studio.fw.entity.LetterInfo" extends="BaseResultMap" >
+    <result column="Letter_content" property="letterContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Letter_id, Sender_id, Reciever_id, Letter_time, Letter_state
+  </sql>
+  <sql id="Blob_Column_List" >
+    Letter_content
+  </sql>
+  <!-- 用户查看自己的ID -->
+  <select id="listById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fw_letter
+    where Reciever_id = #{recieverId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 用户删除自己的信件 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from fw_letter
+    where Letter_id = #{letterId,jdbcType=INTEGER}
+  </delete>
+ 
+  <!-- 买家发自己的信 -->
+  <insert id="insertSelective" parameterType="studio.fw.entity.LetterInfo" >
+    insert into fw_letter
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="letterId != null" >
+        Letter_id,
+      </if>
+      <if test="senderId != null" >
+        Sender_id,
+      </if>
+      <if test="recieverId != null" >
+        Reciever_id,
+      </if>
+      <if test="letterTime != null" >
+        Letter_time,
+      </if>
+      <if test="letterState != null" >
+        Letter_state,
+      </if>
+      <if test="letterContent != null" >
+        Letter_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="letterId != null" >
+        #{letterId,jdbcType=INTEGER},
+      </if>
+      <if test="senderId != null" >
+        #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="recieverId != null" >
+        #{recieverId,jdbcType=INTEGER},
+      </if>
+      <if test="letterTime != null" >
+        #{letterTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="letterState != null" >
+        #{letterState,jdbcType=INTEGER},
+      </if>
+      <if test="letterContent != null" >
+        #{letterContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

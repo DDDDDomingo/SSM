@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.WishlistInfoMapper">
+	<resultMap id="BaseResultMap" type="studio.fw.entity.WishlistInfo">
+		<id column="Wlist_id" property="wlistId" jdbcType="INTEGER" />
+		<result column="Wlist_name" property="wlistName" jdbcType="CHAR" />
+		<result column="Wlist_img" property="wlistImg" jdbcType="CHAR" />
+		<result column="Wlist_time" property="wlistTime" jdbcType="TIMESTAMP" />
+		<result column="Wlist_state" property="wlistState" jdbcType="BIT" />
+		<result column="User_id" property="userId" jdbcType="INTEGER" />
+		<result column="Wlist_type" property="wlistType" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="studio.fw.entity.WishlistInfo"
+		extends="BaseResultMap">
+		<result column="Wlist_content" property="wlistContent"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		Wlist_id, Wlist_name, Wlist_img, Wlist_time, Wlist_state, User_id, Wlist_type
+	</sql>
+	<sql id="Blob_Column_List">
+		Wlist_content
+	</sql>
+	<!-- 搜索出所有的wish -->
+	<select id="listAll" resultMap="ResultMapWithBLOBs">
+		select * from fw_wishlist
+	</select>
+	<!-- 搜索得到相应的wish -->
+	<select id="listBySearch" resultMap="ResultMapWithBLOBs" parameterType="studio.fw.entity.WishlistInfo">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_wishlist
+		where Wlist_name like CONCAT('%',#{wlistName},'%')
+		<if test="wlistType != null">
+			AND	Wlist_type = #{wlistType,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 用户ID得到所有wish -->
+	<select id="listF" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_wishlist
+		where User_id = #{userId,jdbcType=INTEGER} AND Wlist_state = 0
+	</select>
+	<!-- 用户ID得到所有wish -->
+	<select id="listT" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_wishlist
+		where User_id = #{userId,jdbcType=INTEGER} AND Wlist_state = 1
+	</select>
+	<!-- 增加wish -->
+	<insert id="insertSelective" parameterType="studio.fw.entity.WishlistInfo">
+		insert into fw_wishlist
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="wlistId != null">
+				Wlist_id,
+			</if>
+			<if test="wlistName != null">
+				Wlist_name,
+			</if>
+			<if test="wlistImg != null">
+				Wlist_img,
+			</if>
+			<if test="wlistTime != null">
+				Wlist_time,
+			</if>
+			<if test="wlistState != null">
+				Wlist_state,
+			</if>
+			<if test="userId != null">
+				User_id,
+			</if>
+			<if test="wlistType != null">
+				Wlist_type,
+			</if>
+			<if test="wlistContent != null">
+				Wlist_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="wlistId != null">
+				#{wlistId,jdbcType=INTEGER},
+			</if>
+			<if test="wlistName != null">
+				#{wlistName,jdbcType=CHAR},
+			</if>
+			<if test="wlistImg != null">
+				#{wlistImg,jdbcType=CHAR},
+			</if>
+			<if test="wlistTime != null">
+				#{wlistTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wlistState != null">
+				#{wlistState,jdbcType=BIT},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="wlistType != null">
+				#{wlistType,jdbcType=INTEGER},
+			</if>
+			<if test="wlistContent != null">
+				#{wlistContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 通过ID获得wish -->
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fw_wishlist
+		where Wlist_id = #{wlistId,jdbcType=INTEGER}
+	</select>
+	<!-- 修改商品信息 -->
+	<update id="updateByPrimaryKeySelective" parameterType="studio.fw.entity.WishlistInfo">
+		update fw_wishlist
+		<set>
+			<if test="wlistName != null">
+				Wlist_name = #{wlistName,jdbcType=CHAR},
+			</if>
+			<if test="wlistImg != null">
+				Wlist_img = #{wlistImg,jdbcType=CHAR},
+			</if>
+			<if test="wlistTime != null">
+				Wlist_time = #{wlistTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wlistState != null">
+				Wlist_state = #{wlistState,jdbcType=BIT},
+			</if>
+			<if test="userId != null">
+				User_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="wlistType != null">
+				Wlist_type = #{wlistType,jdbcType=INTEGER},
+			</if>
+			<if test="wlistContent != null">
+				Wlist_content = #{wlistContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where Wlist_id = #{wlistId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from fw_wishlist
+		where Wlist_id = #{wlistId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="studio.fw.entity.WishlistInfo">
+		insert into fw_wishlist (Wlist_id, Wlist_name, Wlist_img,
+		Wlist_time, Wlist_state, User_id,
+		Wlist_type, Wlist_content)
+		values (#{wlistId,jdbcType=INTEGER}, #{wlistName,jdbcType=CHAR},
+		#{wlistImg,jdbcType=CHAR},
+		#{wlistTime,jdbcType=TIMESTAMP}, #{wlistState,jdbcType=BIT}, #{userId,jdbcType=INTEGER},
+		#{wlistType,jdbcType=INTEGER}, #{wlistContent,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="studio.fw.entity.WishlistInfo">
+		update fw_wishlist
+		set Wlist_name = #{wlistName,jdbcType=CHAR},
+		Wlist_img = #{wlistImg,jdbcType=CHAR},
+		Wlist_time = #{wlistTime,jdbcType=TIMESTAMP},
+		Wlist_state = #{wlistState,jdbcType=BIT},
+		User_id = #{userId,jdbcType=INTEGER},
+		Wlist_type = #{wlistType,jdbcType=INTEGER},
+		Wlist_content = #{wlistContent,jdbcType=LONGVARCHAR}
+		where Wlist_id = #{wlistId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="studio.fw.entity.WishlistInfo">
+		update fw_wishlist
+		set Wlist_name = #{wlistName,jdbcType=CHAR},
+		Wlist_img = #{wlistImg,jdbcType=CHAR},
+		Wlist_time = #{wlistTime,jdbcType=TIMESTAMP},
+		Wlist_state = #{wlistState,jdbcType=BIT},
+		User_id = #{userId,jdbcType=INTEGER},
+		Wlist_type = #{wlistType,jdbcType=INTEGER}
+		where Wlist_id = #{wlistId,jdbcType=INTEGER}
+	</update>
+</mapper>

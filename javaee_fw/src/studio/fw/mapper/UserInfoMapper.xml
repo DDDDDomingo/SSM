@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studio.fw.mapper.UserInfoMapper">
+	<resultMap id="BaseResultMap" type="studio.fw.entity.UserInfo">
+		<id column="User_id" property="userId" jdbcType="INTEGER" />
+		<result column="User_name" property="userName" jdbcType="VARCHAR" />
+		<result column="User_account" property="userAccount" jdbcType="VARCHAR" />
+		<result column="User_pwd" property="userPwd" jdbcType="VARCHAR" />
+		<result column="User_tel" property="userTel" jdbcType="CHAR" />
+		<result column="User_realName" property="userRealname"
+			jdbcType="CHAR" />
+		<result column="User_sex" property="userSex" jdbcType="CHAR" />
+		<result column="User_email" property="userEmail" jdbcType="CHAR" />
+		<result column="User_regTime" property="userRegtime" jdbcType="TIMESTAMP" />
+		<result column="User_lastLogin" property="userLastlogin"
+			jdbcType="TIMESTAMP" />
+		<result column="User_qq" property="userQq" jdbcType="CHAR" />
+		<result column="User_avatar" property="userAvatar" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		User_id, User_name, User_account, User_pwd, User_tel,
+		User_realName, User_sex,
+		User_email,
+		User_regTime, User_lastLogin,
+		User_qq, User_avatar
+	</sql>
+	<!-- ID查找 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from fw_user
+		where User_id = #{userId,jdbcType=INTEGER}
+	</select>
+	<!-- 登陆操作,匹配用户名，密码 -->
+	<select id="login" resultMap="BaseResultMap" parameterType="studio.fw.entity.UserInfo">
+		select
+		<include refid="Base_Column_List" />
+		from fw_user
+		where User_account = #{userAccount,jdbcType=VARCHAR} AND
+		User_pwd = #{userPwd,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改登陆时间 -->
+	<update id="updateLoginTime" parameterType="studio.fw.entity.UserInfo">
+		update fw_user
+		set
+		User_lastLogin = #{userLastlogin,jdbcType=TIMESTAMP}
+		where User_account
+		= #{userAccount,jdbcType=VARCHAR}
+	</update>
+	<!-- 注册 -->
+	<insert id="register" parameterType="studio.fw.entity.UserInfo">
+		insert into fw_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				User_id,
+			</if>
+			<if test="userName != null">
+				User_name,
+			</if>
+			<if test="userAccount != null">
+				User_account,
+			</if>
+			<if test="userPwd != null">
+				User_pwd,
+			</if>
+			<if test="userTel != null">
+				User_tel,
+			</if>
+			<if test="userRealname != null">
+				User_realName,
+			</if>
+			<if test="userSex != null">
+				User_sex,
+			</if>
+			<if test="userEmail != null">
+				User_email,
+			</if>
+			<if test="userRegtime != null">
+				User_regTime,
+			</if>
+			<if test="userLastlogin != null">
+				User_lastLogin,
+			</if>
+			<if test="userQq != null">
+				User_qq,
+			</if>
+			<if test="userAvatar != null">
+				User_avatar,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userAccount != null">
+				#{userAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="userPwd != null">
+				#{userPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="userTel != null">
+				#{userTel,jdbcType=CHAR},
+			</if>
+			<if test="userRealname != null">
+				#{userRealname,jdbcType=CHAR},
+			</if>
+			<if test="userSex != null">
+				#{userSex,jdbcType=CHAR},
+			</if>
+			<if test="userEmail != null">
+				#{userEmail,jdbcType=CHAR},
+			</if>
+			<if test="userRegtime != null">
+				#{userRegtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userLastlogin != null">
+				#{userLastlogin,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userQq != null">
+				#{userQq,jdbcType=CHAR},
+			</if>
+			<if test="userAvatar != null">
+				#{userAvatar,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 修改用户信息，也可以用于修改密码 -->
+	<update id="updateByPrimaryKeySelective" parameterType="studio.fw.entity.UserInfo">
+		update fw_user
+		<set>
+			<if test="userName != null">
+				User_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userAccount != null">
+				User_account = #{userAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="userPwd != null">
+				User_pwd = #{userPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="userTel != null">
+				User_tel = #{userTel,jdbcType=CHAR},
+			</if>
+			<if test="userRealname != null">
+				User_realName = #{userRealname,jdbcType=CHAR},
+			</if>
+			<if test="userSex != null">
+				User_sex = #{userSex,jdbcType=CHAR},
+			</if>
+			<if test="userEmail != null">
+				User_email = #{userEmail,jdbcType=CHAR},
+			</if>
+			<if test="userRegtime != null">
+				User_regTime = #{userRegtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userLastlogin != null">
+				User_lastLogin = #{userLastlogin,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userQq != null">
+				User_qq = #{userQq,jdbcType=CHAR},
+			</if>
+			<if test="userAvatar != null">
+				User_avatar = #{userAvatar,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where User_id = #{userId,jdbcType=INTEGER}
+	</update>
+</mapper>
